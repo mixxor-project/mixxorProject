@@ -1,0 +1,7 @@
+﻿<columns units="px">
+  <column name="Character" type="Text" />
+  <column name="Face" type="Text" />
+  <column name="Position" type="Number" format="G" nulltext="-" alignment="Right" />
+  <column name="Text" type="Text" />
+  <column name="Background" type="Text" />
+</columns>
