@@ -130,6 +130,7 @@ public class TextPrint : MonoBehaviour
     Text nowText;
     bool now_TextListCoroutine_active = false;
     bool now_TextWriteInvoke_active = false;
+    bool now_TextSelect_OK = false;
     int nowWrite_idx = 0;
     bool GetButtonDown;
 
@@ -182,7 +183,9 @@ public class TextPrint : MonoBehaviour
         //버튼 다운 부분
         if (Input.GetMouseButtonDown(0))
         {
-            if (CastRay().name == textObj.name)
+            GameObject target = CastRay();
+            if(target != null)
+            if (target.name == textObj.name)
                 GetButtonDown = true;
         }
         else if( Input.GetButtonDown("Jump") ) // 스페이스키
@@ -202,7 +205,7 @@ public class TextPrint : MonoBehaviour
         GameObject target = null;
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
-        // Debug.Log(hit.collider);
+        Debug.Log(hit.collider);
         if (hit.collider != null)
         { 
             target = hit.collider.gameObject;
@@ -249,6 +252,7 @@ public class TextPrint : MonoBehaviour
         {
             LeftText nowLeftText = leftTextList[0];
 
+            if(nowLeftText.text.Length >= 1)
             if(nowLeftText.text[0] == '#') //시작 글자가 #일 경우 커맨드 입력으로.
             {
                 TextCommandActive(nowLeftText.text);
@@ -266,14 +270,24 @@ public class TextPrint : MonoBehaviour
                 FaceImgSet(character, nowLeftText.charaFaceName, nowLeftText.charaPos);
 
             //텍스트를 출력함.
-            nextText = TextCodeCommand(nowLeftText.text);
-            nowName.text = nowLeftText.charaName;
-            nowText.text = "";
-            TextWriteInvoke();
-            yield return new WaitUntil(() => !now_TextWriteInvoke_active);
-            yield return new WaitUntil(() => textEndObj.activeSelf);
-            yield return new WaitUntil(() => GetButtonDown);
-            textEndObj.SetActive(false);
+            if(nowLeftText.charaName != "효과")
+                if(nowLeftText.text[0] != '[')
+                {
+                    nextText = TextCodeCommand(nowLeftText.text);
+                    nowName.text = nowLeftText.charaName;
+                    nowText.text = "";
+                    TextWriteInvoke();
+                    yield return new WaitUntil(() => !now_TextWriteInvoke_active);
+                    yield return new WaitUntil(() => textEndObj.activeSelf);
+                    yield return new WaitUntil(() => GetButtonDown);
+                    textEndObj.SetActive(false);
+                }
+                else //선택지 출력
+                {
+                    now_TextSelect_OK = false;
+                    TextSelectCall(nowLeftText.text);
+                    yield return new WaitUntil(() => now_TextSelect_OK);
+                }
 
             leftTextList.RemoveAt(0);
             if (leftTextList.Count <= 0) break;
@@ -281,6 +295,27 @@ public class TextPrint : MonoBehaviour
 
         now_TextListCoroutine_active = false;
         TextEnd();
+    }
+
+    void TextSelectCall(string _text)
+    {
+        _text = _text.Substring(1, _text.Length - 1);
+        char splt = '[';
+        string[] texts = _text.Split(splt);
+        for(int i = 0; i < texts.Length; i++)
+        {
+            texts[i] = texts[i].Replace(" ] ", "");
+            texts[i] = texts[i].Replace("] ", "");
+            texts[i] = texts[i].Replace("]", "");
+        }
+
+        Debug.LogWarning("선택지를 출력합니다.");
+        for(int i = 0; i < texts.Length; i++)
+        {
+            Debug.Log(i + "번째 선택지 : \"" + texts[i] + "\"");
+        }
+
+        now_TextSelect_OK = true;
     }
 
     void TextCommandActive(string _command)
