@@ -6,32 +6,68 @@ using UnityEngine.UI;
 
 public class SelectTest : MonoBehaviour
 {
-    //button type의 리스트 생성함.
-    //selectButtons로 접근 : 사용자가 클릭한 버튼
-    //Inspector 창에서 사이즈와 그 사이즈에 맞는 버튼 개수 할당 필요함
-    [SerializeField] List<Button> selectButtons = new List<Button>();
-    
+    public RectTransform Parent;
+    public GameObject buttonPre;
+    public int selectNumber;
+    List<string> selectList = new List<string> ();//선택지 텍스트 삽입용
+    public bool isDestroy = false;
+    public GameObject selectButton;
+
     void Start()
     {
-        for (int i = 0; i < selectButtons.Count; i++)
+        int buttonCount = 3;
+        int y = 100; //버튼 위치 조정
+        
+
+        //텍스트 변경에 아이디어가 떠오르지 않아 우선 switch문으로 값을 변경해줌...
+        switch (selectNumber)
         {
-            int index = i;
-            //검색해보니 람다식으로도 사용가능함. 편한걸로 사용하면 될 듯. (아직은 람다가 익숙하지 않아서 + unity에 미숙해서 delegate 사용.)
-            //익명함수(람다식) 사용 
-            // selectButtons[i].onClick.AddListener(() => OnKeyPressed(index));
+            case 1:
+                ButtonText("선택1", "선택2", "선택3");
+                break;
+            case 2:
+                ButtonText("답1", "답2", "답3");
+                break;
+            default:
+                ButtonText("선택지 삽입X", "선택지 삽입X", "선택지 삽입X");
+                break;
+        }
+        
+        for (int i = 0; i < buttonCount; i++)
+        {
+            selectButton = (GameObject)Instantiate(buttonPre); //프리팹인스턴스
+            selectButton.transform.SetParent(Parent, false);//지정한 패널(캔버스) 위로 올라감.
+            selectButton.transform.localScale = new Vector3(2, 2, 1); //버튼 크기 설정.
+            selectButton.transform.localPosition = new Vector3(0, y, 0); //버튼 위치 설정.
+            selectButton.GetComponentInChildren<Text>().text = selectList[i]; 
+            y -= 100; //버튼 위치로 y값 변경
+            Button exButton = selectButton.GetComponent<Button>();
+            
+            int buttonIndex = i; // 버튼 인덱스 값 저장.
+            exButton.onClick.AddListener(() => ButtonClicked(buttonIndex));
+        }
+    }//start
 
 
-            //onClick함수 안에 파라미터로 clickButton 함수(만듦...) 넣음
-            selectButtons[i].onClick.AddListener(delegate
+    void ButtonClicked(int buttonIndex)
+    {
+        Debug.Log(buttonIndex);
+        isDestroy = true;
+        if (isDestroy == true)
+        {
+            foreach(Transform child in Parent)
             {
-                clickButton(index);
-            });
+                Destroy(child.gameObject);
+            }
         }
     }
 
-    public void clickButton(int index)
+
+    void ButtonText(string answer1,string answer2,string answer3)
     {
-        var buttonIndex = index; //클릭된 button의 index값이 저장되는 변수
-        // Debug.Log(buttonIndex);
+        selectList.Add(answer1);
+        selectList.Add(answer2);
+        selectList.Add(answer3);
     }
+
 }
