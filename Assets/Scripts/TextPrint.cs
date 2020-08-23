@@ -1,14 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-
 [System.Serializable]
-public class CharaFacePos
+public class CharaFacePos //캐릭터의 페이스 이미지 posisions를 관리하는 함수
 {
     public List<facePos> posList;
 
@@ -19,33 +15,6 @@ public class CharaFacePos
         public int pos;
         public RectTransform getPos;
     }
-
-    #region 더이상 사용하지 않는 부분
-    //public enum positions
-    //{
-    //    center,
-    //    left,
-    //    right,
-    //    NumberOfTypes // enum의 개수를 받아오기 위한 값.
-    //}
-
-    //public int GetPosEnum(string _posName) //position enum값을 리턴함.
-    //{
-    //    var result = positions.center;
-    //    int posCount = (int)positions.NumberOfTypes;
-
-    //    for (int i = 0; i < posCount; i++)
-    //    {
-    //        var val = (positions)i;
-    //        if (_posName == val.ToString())
-    //        {
-    //            result = val;
-    //            break;
-    //        }
-    //    }
-    //    return result;
-    //}
-    #endregion
 
     public Vector3 GetPosition(int _pos)
     {
@@ -66,7 +35,7 @@ public class CharaFacePos
 }
 
 [System.Serializable]
-public class LeftText
+public class LeftText // 받아온 텍스트 리스트를 저장하는 class
 {
     public string text;
     public string charaName;
@@ -74,6 +43,7 @@ public class LeftText
     public int charaPos;
     public string bgName = "";
 
+    #region 클래스 추가 부분
     public LeftText(string _text, string _charaName = "", string _charaFace = "", int _charaPos = 999, string _bgName =  "")
     {
         text = _text;
@@ -91,13 +61,12 @@ public class LeftText
         charaPos = 999;
         bgName = _bgName;
     }
+    #endregion
 }
 
 public class TextPrint : MonoBehaviour
 {
     public static TextPrint instance;
-
-    //public List<Sprite> bgImgList;
 
     //캐릭터 이미지 설정
     [Header("캐릭터 이미지 리스트")]
@@ -131,6 +100,7 @@ public class TextPrint : MonoBehaviour
     bool now_TextListCoroutine_active = false;
     bool now_TextWriteInvoke_active = false;
     bool now_TextSelect_OK = false;
+    [SerializeField, Range(0, 5)] int now_TextSelect_idx = -1;
     int nowWrite_idx = 0;
     bool GetButtonDown;
 
@@ -147,6 +117,7 @@ public class TextPrint : MonoBehaviour
 
     private void Start() //테스트를 합니다.
     {
+        #region 테스트
         //string[] testTexts = new string[] { "안녕하세요."};
         //TextStart(testTexts);
 
@@ -172,6 +143,7 @@ public class TextPrint : MonoBehaviour
 
         //testTexts = new string[] { "값을 한 번 더 넣어봅니다. 으아아아 아아아아 아 아 아 아 아 아 아" };
         //TextStart(testTexts);
+        #endregion
     }
 
     private void Update()
@@ -184,7 +156,7 @@ public class TextPrint : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             GameObject target = CastRay();
-            if(target != null)
+            if (target != null)
             if (target.name == textObj.name)
                 GetButtonDown = true;
         }
@@ -229,6 +201,7 @@ public class TextPrint : MonoBehaviour
 
     public void TextStart(string[] _texts) //string[]을 받고 텍스트 이벤트 자체를 실행시켜주는 함수
     {
+        #region 거의 사용안될 예정이라 접어둠
         nowTextActive = true;
         for(int i= 0; i<_texts.Length; i++)
         {
@@ -240,9 +213,10 @@ public class TextPrint : MonoBehaviour
         {
             StartCoroutine(TextListCoroutine());
         }
+        #endregion
     }
 
-    IEnumerator TextListCoroutine() //받은 텍스트 리스트를 비워주는 함수
+    IEnumerator TextListCoroutine() //받은 텍스트 리스트를 가지고 텍스트 자체를 출력해주는 함수
     {
         now_TextListCoroutine_active = true;
         textObj.SetActive(true);
@@ -250,15 +224,33 @@ public class TextPrint : MonoBehaviour
 
         while (true)
         {
+            if (leftTextList.Count <= 0) break;
             LeftText nowLeftText = leftTextList[0];
+            leftTextList.RemoveAt(0);
 
-            if(nowLeftText.text.Length >= 1)
+            if (nowLeftText.text.Length >= 1)
             if(nowLeftText.text[0] == '#') //시작 글자가 #일 경우 커맨드 입력으로.
             {
                 TextCommandActive(nowLeftText.text);
-                leftTextList.RemoveAt(0);
-                if (leftTextList.Count <= 0) break;
                 continue;
+            }
+
+            if (now_TextSelect_idx != -1) // 선택지 검사
+            if (nowLeftText.text.Length >= 6)
+            {
+                int selNum = IsThisSelectedText(nowLeftText.text);
+                if(selNum == -1)
+                {
+                    now_TextSelect_idx = -1;
+                }
+                else if (selNum == now_TextSelect_idx + 1)
+                {
+                    nowLeftText.text = nowLeftText.text.Substring(6, nowLeftText.text.Length - 6);
+                }
+                else if(selNum != now_TextSelect_idx + 1)
+                {
+                    continue;
+                }
             }
 
             //배경을 설정합니다.
@@ -271,10 +263,19 @@ public class TextPrint : MonoBehaviour
 
             //텍스트를 출력함.
             if(nowLeftText.charaName != "효과")
-                if(nowLeftText.text[0] != '[')
+                if(nowLeftText.text[0] == '[') // 선택지 출력
+                {
+                    now_TextSelect_OK = false;
+                    TextSelectCall(nowLeftText.text);
+                    yield return new WaitUntil(() => now_TextSelect_OK);
+                }
+                else // 기본 텍스트 출력
                 {
                     nextText = TextCodeCommand(nowLeftText.text);
-                    nowName.text = nowLeftText.charaName;
+                    if (nowLeftText.charaName == "이름없음")
+                        nowName.text = "";
+                    else
+                        nowName.text = nowLeftText.charaName;
                     nowText.text = "";
                     TextWriteInvoke();
                     yield return new WaitUntil(() => !now_TextWriteInvoke_active);
@@ -282,19 +283,29 @@ public class TextPrint : MonoBehaviour
                     yield return new WaitUntil(() => GetButtonDown);
                     textEndObj.SetActive(false);
                 }
-                else //선택지 출력
-                {
-                    now_TextSelect_OK = false;
-                    TextSelectCall(nowLeftText.text);
-                    yield return new WaitUntil(() => now_TextSelect_OK);
-                }
 
-            leftTextList.RemoveAt(0);
-            if (leftTextList.Count <= 0) break;
         }
 
         now_TextListCoroutine_active = false;
-        TextEnd();
+        textObj.SetActive(false);
+        nowTextActive = false;
+    }
+
+    #region 선택지 선택
+    int IsThisSelectedText(string _text)
+    {
+        // string값을 넣으면 그게 몇번째 선택지인지 알려주는 것. -1일 경우 없음.
+        int result = -1;
+
+        string commend = _text.Substring(0, 6);
+        if(commend.Substring(0,3) == "선택지")
+        {
+            char c = commend[4];
+            result = int.Parse(c.ToString());
+            Debug.Log("선택지 값은 " + result);
+        }
+
+        return result;
     }
 
     void TextSelectCall(string _text)
@@ -315,9 +326,13 @@ public class TextPrint : MonoBehaviour
             Debug.Log(i + "번째 선택지 : \"" + texts[i] + "\"");
         }
 
-        now_TextSelect_OK = true;
-    }
+        now_TextSelect_idx = 1; // 받아온 선택지 값.
 
+        now_TextSelect_OK = true; // 선택지가 끝나면 true로 해줌.
+    }
+    #endregion
+
+    #region #으로 시작하는 커맨드 처리
     void TextCommandActive(string _command)
     {
         _command = _command.Substring(1, _command.Length - 1);
@@ -338,7 +353,9 @@ public class TextPrint : MonoBehaviour
 
         Debug.LogWarning(_command +" 커맨드가 실행되었습니다.");
     }
+    #endregion
 
+    #region 배경 설정
     void BackgroundSet(string _bgName)
     {
         if (_bgName == "") return;
@@ -353,7 +370,9 @@ public class TextPrint : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region 캐릭터 이미지 관련
     CharacterImg CharaOK(string _charaName)
     {
         if (_charaName == "") return null;
@@ -486,7 +505,9 @@ public class TextPrint : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region 텍스트 내부 커맨드 ex. <강조></강조>
     string TextCodeCommand(string _origText)
     {
         string result = _origText;
@@ -552,6 +573,7 @@ public class TextPrint : MonoBehaviour
         if (block) result = '<' + result + '>';
         return result;
     }
+    #endregion
 
     void TextWriteInvoke() //텍스트를 정말로 Text컴포넌트에 넣어주는 부분
     {
@@ -569,7 +591,7 @@ public class TextPrint : MonoBehaviour
         }
     }
 
-    string AddText()
+    string AddText() // 텍스트를 한 글자 씩 추가해주는 함수
     {
         string next = "";
         char add;
@@ -596,11 +618,10 @@ public class TextPrint : MonoBehaviour
 
         } while (loop);
 
-
         return next;
     }
 
-    void TextWriteInvoke_End()
+    void TextWriteInvoke_End() // 텍스트 출력 이벤트가 모두 종료되면 실행되는 함수
     {
         CancelInvoke("TextWriteInvoke");
         nowText.text = nextText;
@@ -608,13 +629,6 @@ public class TextPrint : MonoBehaviour
         textEndObj.SetActive(true);
         now_TextWriteInvoke_active = false;
     }
-
-    void TextEnd()
-    {
-        textObj.SetActive(false);
-        nowTextActive = false;
-    }
-
 
 
 }

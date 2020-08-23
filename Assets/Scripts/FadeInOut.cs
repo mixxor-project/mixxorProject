@@ -20,7 +20,7 @@ public class FadeInOut : MonoBehaviour
     void Update()
     {
          // FadeIn(); // 밝아지는
-          FadeOut(); // 어두워지는
+          //FadeOut(); // 어두워지는
     }
 
     public void FadeOut()

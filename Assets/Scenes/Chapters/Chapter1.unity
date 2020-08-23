@@ -354,7 +354,6 @@ GameObject:
   - component: {fileID: 408234925}
   - component: {fileID: 408234924}
   - component: {fileID: 408234923}
-  - component: {fileID: 408234926}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -428,18 +427,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &408234926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 408234922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd85786566c071a4f8a0d6fb17fda8e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &569477602
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,6 +527,7 @@ GameObject:
   - component: {fileID: 685569757}
   - component: {fileID: 685569760}
   - component: {fileID: 685569759}
+  - component: {fileID: 685569758}
   m_Layer: 5
   m_Name: FadeIntroImage
   m_TagString: Untagged
@@ -566,6 +554,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0.00073242, y: -0.0019073}
   m_SizeDelta: {x: 1919.7139, y: 1080.1564}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &685569758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 685569756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd85786566c071a4f8a0d6fb17fda8e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &685569759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -956,6 +956,7 @@ MonoBehaviour:
   origChara: {fileID: 2234729781204844061, guid: 7719f2ca9fbaf7643a4ab319814239ea,
     type: 3}
   charaList: []
+  now_TextSelect_idx: 0
 --- !u!1 &1547891179
 GameObject:
   m_ObjectHideFlags: 0
