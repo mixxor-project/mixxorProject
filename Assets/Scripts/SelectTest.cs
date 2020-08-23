@@ -23,7 +23,7 @@ public class SelectTest : MonoBehaviour
         switch (selectNumber)
         {
             case 1:
-                ButtonText("선택1", "선택2", "선택3");
+                ButtonText("선택1", "선택2", "선택3"); //ButtonText가 수정된다면 이건 ButtonText(new string[] = {"선택1", "선택2", "선택3"}); 이런 식이 되겠네요.
                 break;
             case 2:
                 ButtonText("답1", "답2", "답3");
@@ -60,11 +60,13 @@ public class SelectTest : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+        // 후에 스크립트 재사용을 위해서 selectList를 비워줘야 합니다. selectList.Clear(); 였나 아마 맞을거예요(?)
     }
 
 
-    void ButtonText(string answer1,string answer2,string answer3)
+    void ButtonText(string answer1,string answer2,string answer3) // string[] answers <= 같은 식으로 받아주시면 더 좋을거 같습니다
     {
+        // for (int i = 0; i < answers.length; i++) selectList.Add(answer[i]);
         selectList.Add(answer1);
         selectList.Add(answer2);
         selectList.Add(answer3);
