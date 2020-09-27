@@ -514,7 +514,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &685569756
 GameObject:
@@ -637,7 +637,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -23.820011}
+  m_AnchoredPosition: {x: 0, y: -78}
   m_SizeDelta: {x: -60, y: -107.63998}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1034375513
@@ -672,9 +672,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New TextNew TextNew TextNew TextNew TextNew TextNew TextNew TextNew TextNew
-    TextNew TextNew TextNew TextNew TextNew TextNew TextNew TextNew TextNew TextNew
-    TextNew TextNew Text
+  m_Text: 
 --- !u!222 &1034375514
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1301,11 +1299,11 @@ MonoBehaviour:
   - name: "\uC5D8\uB9AD\uC2DC\uC628"
     faceList:
     - name: "\uAE30\uBCF8"
-      faceImg: {fileID: 21300000, guid: 8f660ff61f010514fa2cf46eb44b5458, type: 3}
+      faceImg: {fileID: 21300000, guid: e7d1080d2429d6149a32940011c0a1a4, type: 3}
   - name: "\uCD0C\uC7A5"
     faceList:
     - name: "\uAE30\uBCF8"
-      faceImg: {fileID: 21300000, guid: c6fbbfd587ba49b48b70bdbfcbb80215, type: 3}
+      faceImg: {fileID: 21300000, guid: f10cef8e9669194499036a4164530117, type: 3}
 --- !u!1 &2054922564
 GameObject:
   m_ObjectHideFlags: 0
