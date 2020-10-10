@@ -15,6 +15,9 @@ public class CharacterImg
     {
         public string name;
         public Sprite faceImg;
+        public Vector2 faceScale;
+        public Vector2 facePos;
+        public bool faceFlipX;
     }
     #endregion
 }

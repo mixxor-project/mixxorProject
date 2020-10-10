@@ -415,14 +415,15 @@ public class TextPrint : MonoBehaviour
 
     void FaceImgSet(CharacterImg _character, string _faceName, int _pos)
     {
+        CharacterImg.CharaFace nowChara = new CharacterImg.CharaFace();
         Sprite faceSprite = _character.faceList[0].faceImg;
             //아무런 스프라이트가 없을 경우, 기본적으로 0번에 있는 face를 리턴.
         for(int i = 0; i< _character.faceList.Count; i++)
         {
-            var target = _character.faceList[i];
-            if (target.name == _faceName)
+            nowChara = _character.faceList[i];
+            if (nowChara.name == _faceName)
             {
-                faceSprite = target.faceImg;
+                faceSprite = nowChara.faceImg;
                 break;
             }
         }
@@ -437,13 +438,20 @@ public class TextPrint : MonoBehaviour
         TextPrint_Chara targetChara = FindChara(_character.name);
         if (targetChara == null) return; //버그방지용
         targetChara.ChangeImg(faceSprite);
+        targetChara.img.SetNativeSize();
         if (!targetChara.firstUse && _pos == 999)  _pos = 0;
         NoDupliLocation(_pos, targetChara.charaName);
         Vector3 nextPos = charaImgPos.GetPosition(_pos);
         if(nextPos != new Vector3(999, 999)) //Vector3 999, 999는 위치값이 존재하지 않다는 뜻
             targetChara.ChangeTransform(_pos, nextPos);
+        targetChara.transform.position = new Vector3(targetChara.transform.position.x + nowChara.facePos.x, 
+            targetChara.transform.position.y + nowChara.facePos.y, 
+            targetChara.transform.position.z);
+        targetChara.transform.localScale = new Vector3(
+            nowChara.faceScale.x * (nowChara.faceFlipX ? -1 : 1) * (_pos < 0 ? -1 : 1), 
+            nowChara.faceScale.y, 1);
 
-        for(int i = 0; i < charaList.Count; i++)
+        for (int i = 0; i < charaList.Count; i++)
         {
             if (charaList[i] == targetChara)
                 charaList[i].ImgEffect();
@@ -468,6 +476,7 @@ public class TextPrint : MonoBehaviour
 
         GameObject newObj = Instantiate(origChara.gameObject, Vector3.zero, Quaternion.identity);
         newObj.name = "[" + _charaName + "]";
+        newObj.transform.localScale = new Vector3(1, 1, 1);
         newObj.transform.SetParent(charaParent.transform);
         TextPrint_Chara newChara = newObj.GetComponent<TextPrint_Chara>();
         newChara.charaName = _charaName;
