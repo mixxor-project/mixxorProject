@@ -18,12 +18,12 @@ public class Letter : MonoBehaviour
     {
         if(myText.text == "(황실에서 온 급한 편지다. 얼른 읽어보자)")
         {
-            GameObject.Find("Image").transform.FindChild("Letter").gameObject.SetActive(true);
+            GameObject.Find("Image").transform.Find("Letter").gameObject.SetActive(true);
         }    
 
         if(myText.text == "~튜토리얼~")
         {
-            GameObject.Find("Image").transform.FindChild("Letter").gameObject.SetActive(false);
+            GameObject.Find("Image").transform.Find("Letter").gameObject.SetActive(false);
         }
     }
 }
