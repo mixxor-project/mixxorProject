@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class SelectTest : MonoBehaviour
 {
+    public static SelectTest instance;
+    private void Awake()
+    {
+        instance = this;
+    }
+
     public RectTransform Parent;
     public GameObject buttonPre;
     public int selectNumber;
@@ -15,6 +21,7 @@ public class SelectTest : MonoBehaviour
 
     void Start()
     {
+        /*
         int buttonCount = 3;
         int y = 100; //버튼 위치 조정
 
@@ -31,9 +38,17 @@ public class SelectTest : MonoBehaviour
                 break;
         }
         ButtonGenerate(buttonCount, y);
+        */
     }//start
 
-    void ButtonGenerate(int buttonCount,int y)
+    public void ButtonGenerate(string[] btnTxts, int y = 100) // ↑위 과정을 한 번에 해주는 같은 이름의 함수.
+    {
+        isDestroy = false;
+        ButtonText(btnTxts);
+        ButtonGenerate(btnTxts.Length, y);
+    }
+
+    void ButtonGenerate(int buttonCount, int y)
     {
         for (int i = 0; i < buttonCount; i++)
         {
@@ -53,6 +68,7 @@ public class SelectTest : MonoBehaviour
     void ButtonClicked(int buttonIndex)
     {
         Debug.Log(buttonIndex);
+        selectNumber = buttonIndex;
         isDestroy = true;
         if (isDestroy == true)
         {

@@ -326,10 +326,19 @@ public class TextPrint : MonoBehaviour
             Debug.Log(i + "번째 선택지 : \"" + texts[i] + "\"");
         }
 
-        now_TextSelect_idx = 1; // 받아온 선택지 값.
+        StartCoroutine(TextSelectCoroutine(texts));
+    }
 
+    IEnumerator TextSelectCoroutine(string[] _texts)
+    {
+        SelectTest.instance.ButtonGenerate(_texts);
+        now_TextSelect_idx = -1; // 받아온 선택지 값.
+        yield return new WaitUntil(() => SelectTest.instance.isDestroy);
+        yield return new WaitForSeconds(0.01f); // 아주잠시 대기해줌
+        now_TextSelect_idx = SelectTest.instance.selectNumber; // 받아온 선택지 값.
         now_TextSelect_OK = true; // 선택지가 끝나면 true로 해줌.
     }
+
     #endregion
 
     #region #으로 시작하는 커맨드 처리
