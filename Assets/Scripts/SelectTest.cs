@@ -19,27 +19,6 @@ public class SelectTest : MonoBehaviour
     public bool isDestroy = false;
     public GameObject selectButton;
 
-    void Start()
-    {
-        /*
-        int buttonCount = 3;
-        int y = 100; //버튼 위치 조정
-
-        switch (selectNumber)
-        {
-            case 1: 
-                ButtonText(new string[] { "선택1", "선택2", "선택3"}); //ButtonText가 수정된다면 이건 ButtonText(new string[] = {"선택1", "선택2", "선택3"}); 이런 식이 되겠네요.
-                break;
-            case 2:
-                ButtonText(new string[] { "답1", "답2", "답3" });
-                break;
-            default:
-                ButtonText(new string[] { "선택지 삽입X", "선택지 삽입X", "선택지 삽입X" });
-                break;
-        }
-        ButtonGenerate(buttonCount, y);
-        */
-    }//start
 
     public void ButtonGenerate(string[] btnTxts, int y = 100) // ↑위 과정을 한 번에 해주는 같은 이름의 함수.
     {

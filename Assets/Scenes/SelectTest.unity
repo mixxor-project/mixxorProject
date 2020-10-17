@@ -403,9 +403,10 @@ MonoBehaviour:
   Parent: {fileID: 1911763831}
   buttonPre: {fileID: 4189559651629497364, guid: 37db957f2a1233849be076748c82ffd6,
     type: 3}
-  selectNumber: 3
+  selectNumber: 2
   isDestroy: 0
-  selectButton: {fileID: 0}
+  selectButton: {fileID: 4189559651629497364, guid: 37db957f2a1233849be076748c82ffd6,
+    type: 3}
 --- !u!4 &1505839367
 Transform:
   m_ObjectHideFlags: 0
