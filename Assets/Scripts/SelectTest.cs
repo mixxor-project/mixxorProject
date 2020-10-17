@@ -31,9 +31,9 @@ public class SelectTest : MonoBehaviour
     {
         for (int i = 0; i < buttonCount; i++)
         {
+            y -= 20;
             selectButton = (GameObject)Instantiate(buttonPre); //프리팹인스턴스
             selectButton.transform.SetParent(Parent, false);//지정한 패널(캔버스) 위로 올라감.
-            selectButton.transform.localScale = new Vector3(2, 2, 1); //버튼 크기 설정.
             selectButton.transform.localPosition = new Vector3(0, y, 0); //버튼 위치 설정.
             selectButton.GetComponentInChildren<Text>().text = selectList[i];
             y -= 100; //버튼 위치로 y값 변경
@@ -62,7 +62,6 @@ public class SelectTest : MonoBehaviour
 
     void ButtonText(string[] answers) // string[] answers <= 같은 식으로 받아주시면 더 좋을거 같습니다
     {
-        // for (int i = 0; i < answers.length; i++) selectList.Add(answer[i]);
         for (int i = 0; i < answers.Length; i++)
         {
             selectList.Add(answers[i]);
