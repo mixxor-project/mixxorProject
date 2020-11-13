@@ -263,7 +263,7 @@ public class TextPrint : MonoBehaviour
 
             //텍스트를 출력함.
             if(nowLeftText.charaName != "효과")
-                if(nowLeftText.text[0] == '[') // 선택지 출력
+                if(nowLeftText.text.Length > 0 && nowLeftText.text[0] == '[') // 선택지 출력
                 {
                     now_TextSelect_OK = false;
                     TextSelectCall(nowLeftText.text);
