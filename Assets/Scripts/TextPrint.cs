@@ -97,6 +97,11 @@ public class TextPrint : MonoBehaviour
     string nextText = "";
     Text nowName;
     Text nowText;
+
+    // 현재 텍스트 루프 관련.
+    bool now_TextLoop_active = false; 
+    int nowLeftTextIndex = 0;
+
     bool now_TextListCoroutine_active = false;
     bool now_TextWriteInvoke_active = false;
     bool now_TextSelect_OK = false;
@@ -177,7 +182,7 @@ public class TextPrint : MonoBehaviour
         GameObject target = null;
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
-        Debug.Log(hit.collider);
+        //Debug.Log(hit.collider);
         if (hit.collider != null)
         { 
             target = hit.collider.gameObject;
@@ -221,19 +226,24 @@ public class TextPrint : MonoBehaviour
         now_TextListCoroutine_active = true;
         textObj.SetActive(true);
         textEndObj.SetActive(false);
+        LeftText nowLeftText;
+        nowLeftTextIndex = 0;
 
         while (true)
         {
             if (leftTextList.Count <= 0) break;
-            LeftText nowLeftText = leftTextList[0];
-            leftTextList.RemoveAt(0);
 
-            if (nowLeftText.text.Length >= 1)
-            if(nowLeftText.text[0] == '#') //시작 글자가 #일 경우 커맨드 입력으로.
-            {
-                TextCommandActive(nowLeftText.text);
-                continue;
-            }
+            nowLeftText = leftTextList[nowLeftTextIndex];
+
+            if (now_TextLoop_active)
+                if (nowLeftTextIndex < leftTextList.Count)
+                    nowLeftTextIndex++;
+                else
+                    nowLeftTextIndex = 0;
+
+            if (!now_TextLoop_active)
+                for (int i = 0; i <= nowLeftTextIndex; i++)
+                    leftTextList.RemoveAt(0);
 
             if (now_TextSelect_idx != -1) // 선택지 검사
             if (nowLeftText.text.Length >= 6)
@@ -251,6 +261,13 @@ public class TextPrint : MonoBehaviour
                 {
                     continue;
                 }
+            }
+
+            if (nowLeftText.text.Length >= 1)
+            if(nowLeftText.text[0] == '#') //시작 글자가 #일 경우 커맨드 입력으로.
+            {
+                TextCommandActive(nowLeftText.text);
+                continue;
             }
 
             //배경을 설정합니다.
@@ -302,7 +319,7 @@ public class TextPrint : MonoBehaviour
         {
             char c = commend[4];
             result = int.Parse(c.ToString());
-            Debug.Log("선택지 값은 " + result);
+            // Debug.Log("선택지 값은 " + result);
         }
 
         return result;
@@ -320,11 +337,11 @@ public class TextPrint : MonoBehaviour
             texts[i] = texts[i].Replace("]", "");
         }
 
-        Debug.LogWarning("선택지를 출력합니다.");
+        /* Debug.LogWarning("선택지를 출력합니다.");
         for(int i = 0; i < texts.Length; i++)
         {
             Debug.Log(i + "번째 선택지 : \"" + texts[i] + "\"");
-        }
+        } */
 
         StartCoroutine(TextSelectCoroutine(texts));
     }
@@ -350,7 +367,7 @@ public class TextPrint : MonoBehaviour
         char splt2 = '/';
         string[] target = comnd[0].Split(splt2);
 
-        switch (comnd[1])
+        switch (comnd[comnd.Length - 1])
         {
             case "퇴장":
                 if (target[0] == "모두")
@@ -358,9 +375,27 @@ public class TextPrint : MonoBehaviour
                 else
                     AllFaceImgSet(target);
                 break;
+            case "루프개시":
+            case "루프시작":
+            case "루프":
+                now_TextLoop_active = true;
+                break;
+            case "루프종료":
+            case "루프 종료": //당연하게도... 커맨드 띄어쓰기 안됨. 주의요망
+                now_TextLoop_active = false;
+                for (int i = 0; i <= nowLeftTextIndex; i++)
+                    leftTextList.RemoveAt(0);
+                nowLeftTextIndex = 0;
+                break;
+            case "루프처음으로":
+            case "루프시작으로":
+            case "루프 시작으로":
+                nowLeftTextIndex = 0;
+                break;
         }
 
-        Debug.LogWarning(_command +" 커맨드가 실행되었습니다.");
+        Debug.LogWarning(_command + "라는 텍스트를 읽은 후 " + 
+            comnd[comnd.Length - 1] + " 커맨드가 실행되었습니다.");
     }
     #endregion
 
