@@ -25,7 +25,9 @@ public class FadeInOut : MonoBehaviour
 
     public void FadeOut()
     {
+        Debug.Log("FadeOut() 실행");
         FadeTime += Time.deltaTime;
+        
         if (Fades <= 255.0f && FadeTime >= 0.0f)
         {
             Fades += 0.1f;
@@ -40,6 +42,7 @@ public class FadeInOut : MonoBehaviour
 
     public void FadeIn()
     {
+        Debug.Log("FadeIn() 실행");
         FadeTime += Time.deltaTime;
 
         if (Fades > 0.0f && FadeTime >= 0.1f)
