@@ -46,7 +46,7 @@ public class SelectTest : MonoBehaviour
 
     void ButtonClicked(int buttonIndex)
     {
-        Debug.Log(buttonIndex);
+        // Debug.Log(buttonIndex);
         selectNumber = buttonIndex;
         isDestroy = true;
         if (isDestroy == true)

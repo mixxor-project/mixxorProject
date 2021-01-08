@@ -221,12 +221,13 @@ public class TextPrint : MonoBehaviour
         #endregion
     }
 
+    LeftText nowLeftText;
+
     IEnumerator TextListCoroutine() //받은 텍스트 리스트를 가지고 텍스트 자체를 출력해주는 함수
     {
         now_TextListCoroutine_active = true;
         textObj.SetActive(true);
         textEndObj.SetActive(false);
-        LeftText nowLeftText;
         nowLeftTextIndex = 0;
 
         while (true)
@@ -383,14 +384,19 @@ public class TextPrint : MonoBehaviour
             case "루프종료":
             case "루프 종료": //당연하게도... 커맨드 띄어쓰기 안됨. 주의요망
                 now_TextLoop_active = false;
-                for (int i = 0; i <= nowLeftTextIndex; i++)
-                    leftTextList.RemoveAt(0);
+                if (leftTextList.Count > 1)
+                    for (int i = 0; i < nowLeftTextIndex; i++)
+                        leftTextList.RemoveAt(0);
                 nowLeftTextIndex = 0;
                 break;
             case "루프처음으로":
             case "루프시작으로":
             case "루프 시작으로":
                 nowLeftTextIndex = 0;
+                break;
+            case "대사지우기":
+                nowText.text = "";
+                nowLeftText.text = "";
                 break;
         }
 

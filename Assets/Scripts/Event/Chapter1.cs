@@ -1,25 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chapter1 : MonoBehaviour
+public class Chapter1 : ChapterFrame
 {
-    int chapterNum = 1;
-
     // Start is called before the first frame update
     void Start()
     {
-        ChapterManager.instance.ReadTextData(2, 1);
-        ChapterManager.instance.ReadTextData(2, 2);
-        /*
-        ChapterManager.instance.ReadTextData(chapterNum, 1);
-        ChapterManager.instance.ReadTextData(chapterNum, 2);
-        */
+        chapterNum = 2;
+
+        //ReadData(1);
+        ReadData(2);
+
+        PlaceMove(); // 상점, 대장간 등으로 이동
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
