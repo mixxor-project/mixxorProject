@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -85,7 +86,7 @@ public class TextPrint : MonoBehaviour
     [ReadOnly]
     public bool nowTextActive = false;
     public List<LeftText> leftTextList = new List<LeftText>();
-    public List<StoreText> storeTextList = new List<StoreText>();
+    // public List<StoreText> storeTextList = new List<StoreText>();
 
     //텍스트 부가기능
     [Header("이미지 설정")]
@@ -152,43 +153,43 @@ public class TextPrint : MonoBehaviour
         #endregion
     }
 
+    bool updateActive = false;
+
     private void Update()
+    {
+        TextClick(updateActive);
+        updateActive = false;
+    }
+
+    public void TextOnClick(bool active = false)
+    {
+        updateActive = active;
+    }
+
+    void TextClick(bool active = false)
     {
         GetButtonDown = false; //텍스트 출력 이벤트를 중지시킬 때 사용
 
         if (!nowTextActive) return;
 
         //버튼 다운 부분
-        if (Input.GetMouseButtonDown(0))
-        {
-            GameObject target = CastRay();
-            if (target != null)
-            if (target.name == textObj.name)
-                GetButtonDown = true;
-        }
-        else if( Input.GetButtonDown("Jump") ) // 스페이스키
+        if (active || Input.GetButtonDown("Jump")) // 스페이스키
         {
             GetButtonDown = true;
+            Debug.Log("눌림");
         }
+        /* else if (Input.GetMouseButtonDown(0))
+        {
+            GameObject target = UICanvas.instance.CastRay();
+            if (target != null)
+                if (target.name == textObj.name)
+                    GetButtonDown = true;
+        }*/
 
         //텍스트 출력중이 아니면
-        if (!now_TextListCoroutine_active) return; 
-
-        if (GetButtonDown)
-            TextWriteInvoke_End();
-    }
-
-    GameObject CastRay() // 유닛 히트처리 부분. 레이를 쏴서 처리합니다. 
-    {
-        GameObject target = null;
-        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
-        //Debug.Log(hit.collider);
-        if (hit.collider != null)
-        { 
-            target = hit.collider.gameObject;
-        }
-        return target;
+        if (now_TextListCoroutine_active)
+            if (GetButtonDown)
+                TextWriteInvoke_End();
     }
 
     public void TextStart(LeftText[] _texts) //LeftText[]을 받고 텍스트 이벤트 자체를 실행시켜주는 함수

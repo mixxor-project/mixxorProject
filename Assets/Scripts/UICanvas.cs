@@ -36,5 +36,16 @@ public class UICanvas : Singleton<UICanvas>
         instance = this;
     }
 
-
+    public GameObject CastRay()
+    {
+        GameObject target = null;
+        Ray pos = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.GetRayIntersection(pos, Mathf.Infinity);
+        Debug.Log(hit.collider);
+        if (hit.collider != null)
+        {
+            target = hit.collider.gameObject;
+        } 
+        return target;
+    }
 }
