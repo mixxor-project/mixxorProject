@@ -330,6 +330,15 @@ public class TextPrint : MonoBehaviour
 
     void TextSelectCall(string _text)
     {
+        bool itemSelect = false;
+
+        if(_text.Length > 7 && _text.Substring(0, 7) == "[아이템선택]")
+        {
+            itemSelect = true;
+            _text = _text.Substring(7, _text.Length - 7);
+            return;
+        }
+
         _text = _text.Substring(1, _text.Length - 1);
         char splt = '[';
         string[] texts = _text.Split(splt);
@@ -339,14 +348,18 @@ public class TextPrint : MonoBehaviour
             texts[i] = texts[i].Replace("] ", "");
             texts[i] = texts[i].Replace("]", "");
         }
-
-        /* Debug.LogWarning("선택지를 출력합니다.");
-        for(int i = 0; i < texts.Length; i++)
+        
+        if (itemSelect)
         {
-            Debug.Log(i + "번째 선택지 : \"" + texts[i] + "\"");
-        } */
-
-        StartCoroutine(TextSelectCoroutine(texts));
+            List<int> nums = new List<int>();
+            for(int i = 0; i < texts.Length; i++)
+            {
+                nums.Add(int.Parse(texts[i]));
+            }
+            StartCoroutine(ItemSelectCoroutine(nums.ToArray()));
+        }
+        else
+            StartCoroutine(TextSelectCoroutine(texts));
     }
 
     IEnumerator TextSelectCoroutine(string[] _texts)
@@ -357,6 +370,15 @@ public class TextPrint : MonoBehaviour
         yield return new WaitForSeconds(0.01f); // 아주잠시 대기해줌
         now_TextSelect_idx = SelectTest.instance.selectNumber; // 받아온 선택지 값.
         now_TextSelect_OK = true; // 선택지가 끝나면 true로 해줌.
+    }
+
+    IEnumerator ItemSelectCoroutine(int[] _itemIdxs)
+    {
+        // SelectTest.instance.ButtonGenerate(_texts);
+        // yield return new WaitUntil(() => SelectTest.instance.isDestroy); // 아이템선택 완료시
+        yield return new WaitForSeconds(0.01f); // 아주잠시 대기해줌
+        now_TextSelect_idx = 1; // 아이템 idx
+        now_TextSelect_OK = true;
     }
 
     #endregion
