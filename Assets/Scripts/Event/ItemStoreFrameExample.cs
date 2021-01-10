@@ -1,16 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class ChapterFrame : MonoBehaviour
+public class ItemStoreFrameExample : ItemStroeManage
 {
     protected int chapterNum;
 
     protected void ReadData(int sceneNum)
     {
-        ChapterManager.instance.ReadTextData(chapterNum, sceneNum);
+        ReadTextData(chapterNum, 1);
     }
 
     protected void PlaceMove()
@@ -23,17 +23,16 @@ public class ChapterFrame : MonoBehaviour
         while (chapterNum == nowChapterNum)
         {
             yield return new WaitForSeconds(0.01f); // 아주잠시 대기해줌
-            yield return new WaitUntil(() => !TextPrint.instance.nowTextActive);
-            ReadData(3); // 이동 선택지
-            yield return new WaitUntil(() => SelectTest.instance.isDestroy);
-            switch (SelectTest.instance.selectNumber)
+            yield return new WaitUntil(() => !StroeTextPrint.instance.nowTextActive);
+            yield return new WaitUntil(() => SelectItemButton.instance.isDestroy);
+            switch (SelectItemButton.instance.selectNumber)
             {
                 case 0: // 대장간
                     Debug.LogWarning("대장간으로 이동합니다.");
                     break;
                 case 1: // 상점
-                    SceneManager.LoadScene("ItemStore");
                     Debug.LogWarning("상점으로 이동합니다.");
+                    SceneManager.LoadScene("ItemStore");
                     break;
                 case 2: // 여관
                     Debug.LogWarning("여관으로 이동합니다.");
