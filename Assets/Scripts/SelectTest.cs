@@ -29,6 +29,7 @@ public class SelectTest : MonoBehaviour
 
     void ButtonGenerate(int buttonCount, int y)
     {
+        GameObject.Find("FadeIntroImage").GetComponent<FadeInOut>().SelectButtonBackFadeInOut(0.5f,0); // 버튼 생성될 때 fade out 하는 함수
         for (int i = 0; i < buttonCount; i++)
         {
             y -= 20;
@@ -56,6 +57,7 @@ public class SelectTest : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+        GameObject.Find("FadeIntroImage").GetComponent<FadeInOut>().SelectButtonBackFadeInOut(0.5f,1); // 버튼 제거될 때 fade in 하는 함수
         selectList.Clear();
         // 후에 스크립트 재사용을 위해서 selectList를 비워줘야 합니다. selectList.Clear(); 였나 아마 맞을거예요(?)
     }
